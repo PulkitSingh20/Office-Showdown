@@ -1,3 +1,6 @@
+Index · HTML
+Copy
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -887,13 +890,22 @@ function initSocket() {
   socket = io();
 
   socket.on('connect', () => {
-    socket.emit('requestState');
+    // Stay on join screen until player enters their name
+    showScreen('joinScreen');
+  });
+
+  socket.on('disconnect', () => {
+    myId = null;
+    myTeam = null;
+    showScreen('joinScreen');
+    notify('Disconnected. Please refresh.', 'error');
   });
 
   socket.on('joined', ({ id, isAdmin: admin, name }) => {
     myId = id;
     isAdmin = admin;
     myName = name;
+    socket.emit('requestState');  // Request state AFTER we have an identity
     showScreen('lobbyScreen');
     document.getElementById('myNameBadge').textContent = `Logged in as: ${name}${admin ? ' · Admin ⚡' : ''}`;
   });
@@ -903,6 +915,9 @@ function initSocket() {
     renderLobby(state);
     renderGameScores(state);
     updateTeamIndicators(state);
+
+    // ⚠️ Only navigate away from join screen AFTER the player has actually joined
+    if (!myId) return;
 
     if (state.phase === 'lobby' || state.phase === 'team-select') {
       showScreen('lobbyScreen');
@@ -942,11 +957,12 @@ function initSocket() {
   });
 
   socket.on('gameReset', () => {
-    showScreen('lobbyScreen');
     document.getElementById('revealOverlay').classList.remove('show');
     hasAnswered = false;
     selectedAnswer = null;
     myTeam = null;
+    // Only go to lobby if the player has already joined
+    if (myId) showScreen('lobbyScreen');
   });
 
   socket.on('chatMessage', (msg) => {
