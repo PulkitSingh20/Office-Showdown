@@ -30,33 +30,104 @@ let gameState = {
   teamSize: 3,
 };
 
-// ─── Question Bank ─────────────────────────────────────────────────────────
-const QUESTIONS = [
+// ─── Question Bank (60 questions — 15 picked randomly each game) ───────────
+const ALL_QUESTIONS = [
+  // ── TECH ──
   { q: "What does HTTP stand for?", options: ["HyperText Transfer Protocol","HighText Transfer Protocol","HyperText Transit Protocol","HyperTool Transfer Protocol"], correct: 0, category: "Tech" },
-  { q: "Which company created the JavaScript programming language?", options: ["Microsoft","Google","Netscape","Apple"], correct: 2, category: "Tech" },
-  { q: "What year was the first iPhone released?", options: ["2005","2006","2007","2008"], correct: 2, category: "General" },
-  { q: "What is the capital of Japan?", options: ["Beijing","Seoul","Bangkok","Tokyo"], correct: 3, category: "Geography" },
-  { q: "In office terms, what does KPI stand for?", options: ["Key Performance Indicator","Key Process Integration","Key Product Initiative","Knowledge Process Index"], correct: 0, category: "Office" },
-  { q: "Which planet is known as the Red Planet?", options: ["Venus","Jupiter","Mars","Saturn"], correct: 2, category: "Science" },
-  { q: "What does CEO stand for?", options: ["Chief Efficiency Officer","Chief Executive Officer","Central Executive Officer","Chief Engagement Officer"], correct: 1, category: "Office" },
-  { q: "How many bytes are in a kilobyte (standard)?", options: ["512","1024","1000","2048"], correct: 1, category: "Tech" },
-  { q: "What is the most widely spoken language in the world?", options: ["English","Spanish","Hindi","Mandarin Chinese"], correct: 3, category: "General" },
-  { q: "What does 'Agile' refer to in the workplace?", options: ["A fitness program","A project management methodology","A software language","An HR system"], correct: 1, category: "Office" },
-  { q: "Who painted the Mona Lisa?", options: ["Michelangelo","Raphael","Leonardo da Vinci","Donatello"], correct: 2, category: "Culture" },
+  { q: "Which company created JavaScript?", options: ["Microsoft","Google","Netscape","Apple"], correct: 2, category: "Tech" },
+  { q: "How many bytes are in a kilobyte?", options: ["512","1024","1000","2048"], correct: 1, category: "Tech" },
   { q: "What does SaaS stand for?", options: ["Software as a Service","Sales as a Strategy","System and Security","Software and Architecture Stack"], correct: 0, category: "Tech" },
   { q: "Which of these is NOT a programming language?", options: ["Python","Cobra","Ruby","Photoshop"], correct: 3, category: "Tech" },
-  { q: "What year did World War II end?", options: ["1943","1944","1945","1946"], correct: 2, category: "History" },
+  { q: "What does CPU stand for?", options: ["Central Process Unit","Core Processing Unit","Central Processing Unit","Computed Processing Unit"], correct: 2, category: "Tech" },
+  { q: "Which company makes the Android operating system?", options: ["Apple","Microsoft","Samsung","Google"], correct: 3, category: "Tech" },
+  { q: "What does UI stand for in design?", options: ["User Interface","Unified Integration","Upload Interface","User Interaction"], correct: 0, category: "Tech" },
+  { q: "Which language is primarily used for styling web pages?", options: ["HTML","JavaScript","CSS","Python"], correct: 2, category: "Tech" },
+  { q: "What does API stand for?", options: ["Applied Program Index","Application Programming Interface","Automated Process Integration","Application Process Index"], correct: 1, category: "Tech" },
+  { q: "What does URL stand for?", options: ["Uniform Resource Locator","Universal Remote Link","Unified Resource Layer","User Resource Link"], correct: 0, category: "Tech" },
+  { q: "Which of these is a version control system?", options: ["Slack","Docker","Git","Jira"], correct: 2, category: "Tech" },
+
+  // ── OFFICE ──
+  { q: "What does KPI stand for?", options: ["Key Performance Indicator","Key Process Integration","Key Product Initiative","Knowledge Process Index"], correct: 0, category: "Office" },
+  { q: "What does CEO stand for?", options: ["Chief Efficiency Officer","Chief Executive Officer","Central Executive Officer","Chief Engagement Officer"], correct: 1, category: "Office" },
   { q: "What does ROI stand for?", options: ["Rate of Income","Return on Investment","Revenue over Investment","Range of Impact"], correct: 1, category: "Office" },
+  { q: "What does Agile refer to in the workplace?", options: ["A fitness program","A project management methodology","A software language","An HR system"], correct: 1, category: "Office" },
+  { q: "What does B2B stand for?", options: ["Back to Basics","Business to Business","Budget to Baseline","Brand to Buyer"], correct: 1, category: "Office" },
+  { q: "What does OKR stand for?", options: ["Objectives and Key Results","Operations and Key Risks","Output and Knowledge Review","Objectives and KPI Rating"], correct: 0, category: "Office" },
+  { q: "In project management, what is a deliverable?", options: ["A courier service","A tangible output of a project","A team meeting","A budget report"], correct: 1, category: "Office" },
+  { q: "What does CRM stand for?", options: ["Customer Relationship Management","Central Revenue Model","Client Reporting Module","Customer Retention Method"], correct: 0, category: "Office" },
+  { q: "What does P&L stand for?", options: ["Product and Logistics","Profit and Loss","Planning and Launching","Policy and Limits"], correct: 1, category: "Office" },
+  { q: "What is a stakeholder?", options: ["A butcher","Anyone with an interest in a project","A company shareholder only","The project manager"], correct: 1, category: "Office" },
+  { q: "What does WFH stand for?", options: ["Work From Home","Working For Hours","Workflow Handling","Weekly Follow-up Hours"], correct: 0, category: "Office" },
+  { q: "What is scope creep?", options: ["A type of software bug","Uncontrolled expansion of project scope","A management technique","A performance review"], correct: 1, category: "Office" },
+
+  // ── GENERAL ──
+  { q: "What year was the first iPhone released?", options: ["2005","2006","2007","2008"], correct: 2, category: "General" },
+  { q: "What is the most widely spoken language in the world?", options: ["English","Spanish","Hindi","Mandarin Chinese"], correct: 3, category: "General" },
+  { q: "How many sides does a hexagon have?", options: ["5","6","7","8"], correct: 1, category: "General" },
+  { q: "What is the smallest planet in our solar system?", options: ["Mars","Venus","Mercury","Pluto"], correct: 2, category: "General" },
+  { q: "How many continents are there on Earth?", options: ["5","6","7","8"], correct: 2, category: "General" },
+  { q: "What is the hardest natural substance on Earth?", options: ["Gold","Iron","Diamond","Quartz"], correct: 2, category: "General" },
+  { q: "How many hours are in a week?", options: ["148","168","172","156"], correct: 1, category: "General" },
+  { q: "What is the largest ocean on Earth?", options: ["Atlantic","Indian","Arctic","Pacific"], correct: 3, category: "General" },
+  { q: "What is the chemical symbol for water?", options: ["WA","HO","H2O","W2O"], correct: 2, category: "General" },
+  { q: "Which number is considered unlucky in many Western cultures?", options: ["7","11","13","17"], correct: 2, category: "General" },
+
+  // ── GEOGRAPHY ──
+  { q: "What is the capital of Japan?", options: ["Beijing","Seoul","Bangkok","Tokyo"], correct: 3, category: "Geography" },
+  { q: "What is the capital of Australia?", options: ["Sydney","Melbourne","Canberra","Brisbane"], correct: 2, category: "Geography" },
+  { q: "Which country has the largest population?", options: ["USA","India","China","Indonesia"], correct: 1, category: "Geography" },
+  { q: "What is the longest river in the world?", options: ["Amazon","Yangtze","Mississippi","Nile"], correct: 3, category: "Geography" },
+  { q: "Which country is home to the Eiffel Tower?", options: ["Italy","Spain","Germany","France"], correct: 3, category: "Geography" },
+  { q: "What is the capital of Brazil?", options: ["Rio de Janeiro","Sao Paulo","Brasilia","Salvador"], correct: 2, category: "Geography" },
+  { q: "Which is the largest country by land area?", options: ["Canada","China","USA","Russia"], correct: 3, category: "Geography" },
+  { q: "The Great Barrier Reef is located in which country?", options: ["USA","South Africa","New Zealand","Australia"], correct: 3, category: "Geography" },
+
+  // ── SCIENCE ──
+  { q: "Which planet is known as the Red Planet?", options: ["Venus","Jupiter","Mars","Saturn"], correct: 2, category: "Science" },
+  { q: "What gas do plants absorb from the atmosphere?", options: ["Oxygen","Nitrogen","Carbon Dioxide","Hydrogen"], correct: 2, category: "Science" },
+  { q: "What is the powerhouse of the cell?", options: ["Nucleus","Ribosome","Mitochondria","Golgi body"], correct: 2, category: "Science" },
+  { q: "What is the approximate speed of light in km/s?", options: ["150,000","300,000","500,000","1,000,000"], correct: 1, category: "Science" },
+  { q: "How many elements are in the periodic table?", options: ["108","116","118","124"], correct: 2, category: "Science" },
+  { q: "What does DNA stand for?", options: ["Digital Nucleic Acid","Deoxyribonucleic Acid","Dynamic Nucleus Array","Data Nucleic Arrangement"], correct: 1, category: "Science" },
+  { q: "Which planet has the most moons?", options: ["Jupiter","Neptune","Uranus","Saturn"], correct: 3, category: "Science" },
+  { q: "What is the boiling point of water in Celsius?", options: ["90","95","100","105"], correct: 2, category: "Science" },
+
+  // ── HISTORY ──
+  { q: "What year did World War II end?", options: ["1943","1944","1945","1946"], correct: 2, category: "History" },
+  { q: "Who was the first person to walk on the Moon?", options: ["Buzz Aldrin","Yuri Gagarin","Neil Armstrong","John Glenn"], correct: 2, category: "History" },
+  { q: "In what year did the Berlin Wall fall?", options: ["1987","1988","1989","1990"], correct: 2, category: "History" },
+  { q: "Who invented the telephone?", options: ["Thomas Edison","Nikola Tesla","Alexander Graham Bell","Guglielmo Marconi"], correct: 2, category: "History" },
+  { q: "What year did the Titanic sink?", options: ["1910","1911","1912","1913"], correct: 2, category: "History" },
+
+  // ── CULTURE ──
+  { q: "Who painted the Mona Lisa?", options: ["Michelangelo","Raphael","Leonardo da Vinci","Donatello"], correct: 2, category: "Culture" },
+  { q: "Which author wrote Harry Potter?", options: ["Roald Dahl","J.R.R. Tolkien","J.K. Rowling","C.S. Lewis"], correct: 2, category: "Culture" },
+  { q: "What is the world's best-selling video game of all time?", options: ["Tetris","GTA V","Minecraft","Super Mario Bros"], correct: 2, category: "Culture" },
+  { q: "Which musical instrument has 88 keys?", options: ["Organ","Harpsichord","Piano","Synthesizer"], correct: 2, category: "Culture" },
+  { q: "How many players are on a standard soccer team?", options: ["9","10","11","12"], correct: 2, category: "Culture" },
 ];
+
+const QUESTIONS_PER_GAME = 15;
 
 let shuffledQuestions = [];
 
+// Fisher-Yates shuffle for true randomness
 function shuffleArray(arr) {
-  return [...arr].sort(() => Math.random() - 0.5);
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// Pick a fresh random 15 questions each game
+function pickQuestions() {
+  return shuffleArray(ALL_QUESTIONS).slice(0, QUESTIONS_PER_GAME);
 }
 
 function resetGame() {
-  shuffledQuestions = shuffleArray(QUESTIONS);
+  shuffledQuestions = pickQuestions();
   gameState.phase = 'lobby';
   gameState.questionIndex = -1;
   gameState.currentQuestion = null;
@@ -210,7 +281,7 @@ io.on('connection', (socket) => {
       socket.emit('error', { message: 'Each team needs at least 1 player!' });
       return;
     }
-    shuffledQuestions = shuffleArray(QUESTIONS);
+    shuffledQuestions = pickQuestions();
     gameState.questionIndex = -1;
     gameState.questionHistory = [];
     gameState.teams.A.score = 0;
